@@ -33,11 +33,12 @@ body {
     list-style: none;
    
         overflow-x: hidden;
-  background-image: url("../images/back-img1.png");
+  background-image: url("../images/bg_image_.png");
 
-    background-size: 100%;       
-    /* background-position: 100% 100%;   */
-    background-repeat: repeat;
+  background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-attachment: fixed;
    
 }
 
@@ -115,7 +116,7 @@ header {
 
 .hero_section {
     position: relative;
-    min-height: 100vh;
+    /* min-height: 100vh; */
     color: #fff;
     overflow: hidden;
     /* background-color:  radial-gradient(
@@ -151,7 +152,7 @@ header {
 }
 
 .hero_title {
-    font-size: 69px;
+    font-size: 80px;
     font-weight: 700;
     color: #fff;
     line-height: 1.2;
@@ -234,6 +235,7 @@ header {
     line-height: 50px;
     margin-top: 10px;
     font-weight: 700;
+    text-transform: uppercase;
 }
 
 .what_we_do_subtitle span {
@@ -622,7 +624,9 @@ header {
     padding: 80px 0 80px;
 }
 
-
+.founder_section .col-md-3{
+    width: 20%;
+}
 
 .logo_box {
     width: 35px;
@@ -657,6 +661,7 @@ header {
     border-radius: 16px;
     padding: 40px 20px;
     transition: 0.2s;
+    height: 200px;
 }
 
 .contact_card:hover {
@@ -700,6 +705,7 @@ header {
     font-weight: 500;
     color: #fff;
     font-size: 12px;
+        word-break: break-word;
 }
 
 .card_link_wrapper {
@@ -752,12 +758,18 @@ header {
     font-weight: 600;
     margin-bottom: 5px;
     color: #fff;
+    text-transform: uppercase;
+    font-size: 18px;
+}
+.service_item{
+    margin-bottom: 20px;
 }
 
 .service_item p {
     font-size: 14px;
     color: #9f9f9f;
     line-height: 1.6;
+    max-width: 80%;
 }
 
 
@@ -857,6 +869,7 @@ header {
     .btn_primary {
 
         padding: 10px 20px 12px;
+        font-size: 13px;
 
     }
 
@@ -868,17 +881,22 @@ header {
     }
 
     .hero_title {
-        font-size: 35px;
+        font-size: 30px;
 
     }
 
     .hero_subtitle {
-        font-size: 15px;
+        font-size: 14px;
 
     }
+    .what_we_do_subtitle span {
+    font-size: 30px;
+    
+}
 
     .what_we_do_subtitle {
-        font-size: 35px;
+        font-size: 30px;
+            line-height: 37px;
 
     }
 
@@ -887,6 +905,11 @@ header {
         margin: 15px 0;
 
     }
+
+    .service_item p {
+  
+    max-width: 100%;
+}
 
 
 
@@ -946,15 +969,23 @@ header {
         
     }
     .get_touch span {
-    font-size: 35px;
+    font-size: 30px;
     
 }
 
 .get_touch {
-    font-size: 26px !important;
+    font-size: 23px !important;
     
-    line-height: 37px;
+    line-height: 30px;
 
+}
+
+.founder_section .col-md-3 {
+    width: 50%;
+}
+.nav-link {
+   
+    font-size: 13px !important;
 }
 }
 
@@ -978,5 +1009,8 @@ header {
 
 .video_section {
     padding: 0px 0px 0px;
+}
+.founder_section .col-md-3 {
+    width: 100%;
 }
 }
