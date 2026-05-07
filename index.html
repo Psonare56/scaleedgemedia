@@ -435,31 +435,31 @@
 
                         <h4 class="form_heading">Request a Free Consultation</h4>
 
-                        <form>
+                        <form id="consultationForm">
 
                             <div class="row">
                                 <div class="col-md-6 form-group">
                                     <label class="form-label">Name</label>
-                                    <input type="text" class="form-control input_field" placeholder="Enter your name">
+                                    <input type="text" id="leadName" class="form-control input_field" placeholder="Enter your name" required>
                                 </div>
 
                                 <div class="col-md-6 form-group">
                                     <label class="form-label">Phone Number</label>
-                                    <input type="text" class="form-control input_field" placeholder="+91 98765 43210">
+                                    <input type="text" id="leadPhone" class="form-control input_field" placeholder="+91 98765 43210" required>
                                 </div>
                                 <div class="form-group col-md-6">
                                     <label class="form-label">Project / Company Name</label>
-                                    <input type="text" class="form-control input_field"
+                                    <input type="text" id="leadProject" class="form-control input_field"
                                         placeholder="e.g. Sunrise Residency">
                                 </div>
                                 <div class="form-group col-md-6">
                                     <label class="form-label">What's your budget?</label>
-                                    <input type="text" class="form-control input_field" placeholder="Enter your budget">
+                                    <input type="text" id="leadBudget" class="form-control input_field" placeholder="Enter your budget">
                                 </div>
 
                                 <div class="form-group col-md-12">
                                     <label class="form-label">Location</label>
-                                    <input type="text" class="form-control input_field"
+                                    <input type="text" id="leadLocation" class="form-control input_field"
                                         placeholder="Enter your location">
                                 </div>
 
@@ -467,20 +467,60 @@
                                     <label class="form-label">Tell us about your project
                                         (optional)
                                     </label>
-                                    <textarea class="form-control input_field" rows="3"
+                                    <textarea id="leadMessage" class="form-control input_field" rows="3"
                                         placeholder="Location, type of property, launch timeline..."></textarea>
                                 </div>
                             </div>
 
+                            <div id="formAlert" class="mt-2" style="display:none;"></div>
 
-
-                            <a href="#" class="common_btn me-3 d-block text-center w-100">
+                            <button type="submit" id="submitBtn" class="common_btn me-3 d-block text-center w-100" style="border:none;cursor:pointer;">
                                 Book My Free Strategy Call
-                            </a>
-
-
+                            </button>
 
                         </form>
+
+                        <script>
+                            const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzqgFpmOD1FtY1lVNK25GY-UneTPA1CZ36Mp1WqWvveSM62xXF-FHQDqTigJfWlehnxcQ/exec";
+
+                            document.getElementById("consultationForm").addEventListener("submit", function (e) {
+                                e.preventDefault();
+                                const btn = document.getElementById("submitBtn");
+                                const alert = document.getElementById("formAlert");
+                                btn.disabled = true;
+                                btn.textContent = "Submitting...";
+
+                                const data = {
+                                    name: document.getElementById("leadName").value.trim(),
+                                    phone: document.getElementById("leadPhone").value.trim(),
+                                    project: document.getElementById("leadProject").value.trim(),
+                                    budget: document.getElementById("leadBudget").value.trim(),
+                                    location: document.getElementById("leadLocation").value.trim(),
+                                    message: document.getElementById("leadMessage").value.trim()
+                                };
+
+                                fetch(SCRIPT_URL, {
+                                    method: "POST",
+                                    mode: "no-cors",
+                                    body: JSON.stringify(data)
+                                })
+                                .then(function() {
+                                    alert.style.display = "block";
+                                    alert.style.color = "#1db954";
+                                    alert.textContent = "Thank you! We'll be in touch shortly.";
+                                    document.getElementById("consultationForm").reset();
+                                    btn.disabled = false;
+                                    btn.textContent = "Book My Free Strategy Call";
+                                })
+                                .catch(function() {
+                                    alert.style.display = "block";
+                                    alert.style.color = "#ff4d4d";
+                                    alert.textContent = "Something went wrong. Please try again.";
+                                    btn.disabled = false;
+                                    btn.textContent = "Book My Free Strategy Call";
+                                });
+                            });
+                        </script>
                     </div>
                 </div>
 

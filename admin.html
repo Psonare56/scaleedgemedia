@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin — ScaleEdge Media</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="icon" href="assets/images/brand Icon.png" type="image/x-icon">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #0d0d0d;
+            color: #fff;
+            min-height: 100vh;
+        }
+
+        /* ── Login Screen ── */
+        #loginScreen {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: #0d0d0d;
+        }
+
+        .login_box {
+            background: #111;
+            border: 1px solid #1db95433;
+            border-radius: 16px;
+            padding: 40px 36px;
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .login_box img { width: 160px; margin-bottom: 24px; }
+
+        .login_box h5 {
+            color: #aaa;
+            font-size: 14px;
+            margin-bottom: 24px;
+            font-weight: 400;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .login_box input {
+            background: #1a1a1a;
+            border: 1px solid #2a2a2a;
+            color: #fff;
+            border-radius: 8px;
+            padding: 12px 16px;
+            width: 100%;
+            font-size: 15px;
+            margin-bottom: 12px;
+            outline: none;
+            transition: border 0.2s;
+        }
+
+        .login_box input:focus { border-color: #1db954; }
+
+        .login_box button {
+            background: #1db954;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 12px;
+            width: 100%;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .login_box button:hover { background: #17a347; }
+
+        #loginError {
+            color: #ff4d4d;
+            font-size: 13px;
+            margin-top: 10px;
+            display: none;
+        }
+
+        /* ── Admin Dashboard ── */
+        #adminScreen { display: none; }
+
+        .admin_navbar {
+            background: #111;
+            border-bottom: 1px solid #1db95433;
+            padding: 14px 32px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .admin_navbar img { width: 130px; }
+
+        .admin_navbar .right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .admin_navbar .badge_count {
+            background: #1db95420;
+            color: #1db954;
+            border: 1px solid #1db95450;
+            border-radius: 20px;
+            padding: 4px 14px;
+            font-size: 13px;
+        }
+
+        .logout_btn {
+            background: transparent;
+            border: 1px solid #ff4d4d55;
+            color: #ff4d4d;
+            border-radius: 8px;
+            padding: 6px 16px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .logout_btn:hover { background: #ff4d4d22; }
+
+        .admin_body { padding: 32px; }
+
+        .stats_row {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 28px;
+            flex-wrap: wrap;
+        }
+
+        .stat_card {
+            background: #111;
+            border: 1px solid #1db95430;
+            border-radius: 12px;
+            padding: 20px 28px;
+            min-width: 160px;
+        }
+
+        .stat_card .label { color: #888; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; }
+        .stat_card .value { color: #1db954; font-size: 28px; font-weight: 700; margin-top: 4px; }
+
+        .section_header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .section_header h4 { font-size: 16px; color: #fff; font-weight: 600; }
+
+        .refresh_btn {
+            background: #1db95420;
+            border: 1px solid #1db95450;
+            color: #1db954;
+            border-radius: 8px;
+            padding: 7px 18px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .refresh_btn:hover { background: #1db95440; }
+
+        .table_wrapper {
+            background: #111;
+            border: 1px solid #1db95422;
+            border-radius: 14px;
+            overflow: hidden;
+        }
+
+        .leads_table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13.5px;
+        }
+
+        .leads_table thead tr {
+            background: #1db95415;
+            border-bottom: 1px solid #1db95430;
+        }
+
+        .leads_table th {
+            color: #1db954;
+            font-weight: 600;
+            padding: 14px 16px;
+            text-align: left;
+            white-space: nowrap;
+            text-transform: uppercase;
+            font-size: 11px;
+            letter-spacing: 0.8px;
+        }
+
+        .leads_table tbody tr {
+            border-bottom: 1px solid #ffffff08;
+            transition: background 0.15s;
+        }
+
+        .leads_table tbody tr:last-child { border-bottom: none; }
+        .leads_table tbody tr:hover { background: #1db95408; }
+
+        .leads_table td {
+            padding: 13px 16px;
+            color: #ccc;
+            vertical-align: middle;
+        }
+
+        .leads_table td:first-child { color: #666; font-size: 12px; }
+
+        .empty_state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #555;
+        }
+
+        .empty_state i { font-size: 36px; margin-bottom: 12px; display: block; }
+
+        .loading_row td {
+            text-align: center;
+            padding: 50px;
+            color: #555;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #1db95430;
+            border-top-color: #1db954;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .search_box {
+            background: #1a1a1a;
+            border: 1px solid #2a2a2a;
+            color: #fff;
+            border-radius: 8px;
+            padding: 8px 14px;
+            font-size: 13px;
+            outline: none;
+            width: 220px;
+            transition: border 0.2s;
+        }
+
+        .search_box:focus { border-color: #1db954; }
+        .search_box::placeholder { color: #555; }
+
+        @media (max-width: 768px) {
+            .admin_body { padding: 16px; }
+            .leads_table { font-size: 12px; }
+            .leads_table th, .leads_table td { padding: 10px 10px; }
+            .admin_navbar { padding: 12px 16px; }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ── Login Screen ── -->
+    <div id="loginScreen">
+        <div class="login_box">
+            <img src="assets/images/white-logo.png" alt="ScaleEdge Logo">
+            <h5>Admin Panel</h5>
+            <input type="password" id="passwordInput" placeholder="Enter password" onkeydown="if(event.key==='Enter') doLogin()">
+            <button onclick="doLogin()"><i class="fa fa-lock me-2"></i>Login</button>
+            <div id="loginError">Incorrect password. Try again.</div>
+        </div>
+    </div>
+
+    <!-- ── Admin Dashboard ── -->
+    <div id="adminScreen">
+
+        <div class="admin_navbar">
+            <img src="assets/images/white-logo.png" alt="ScaleEdge Logo">
+            <div class="right">
+                <span class="badge_count" id="totalCount">— leads</span>
+                <button class="logout_btn" onclick="doLogout()"><i class="fa fa-sign-out-alt me-1"></i>Logout</button>
+            </div>
+        </div>
+
+        <div class="admin_body">
+
+            <div class="stats_row">
+                <div class="stat_card">
+                    <div class="label">Total Leads</div>
+                    <div class="value" id="statTotal">—</div>
+                </div>
+                <div class="stat_card">
+                    <div class="label">Today</div>
+                    <div class="value" id="statToday">—</div>
+                </div>
+                <div class="stat_card">
+                    <div class="label">This Week</div>
+                    <div class="value" id="statWeek">—</div>
+                </div>
+            </div>
+
+            <div class="section_header">
+                <h4><i class="fa fa-users me-2" style="color:#1db954;"></i>Consultation Leads</h4>
+                <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+                    <input type="text" class="search_box" id="searchInput" placeholder="Search leads..." oninput="filterTable()">
+                    <button class="refresh_btn" onclick="loadLeads()"><i class="fa fa-sync-alt me-1"></i>Refresh</button>
+                </div>
+            </div>
+
+            <div class="table_wrapper">
+                <table class="leads_table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Timestamp</th>
+                            <th>Name</th>
+                            <th>Phone</th>
+                            <th>Project / Company</th>
+                            <th>Budget</th>
+                            <th>Location</th>
+                            <th>Message</th>
+                        </tr>
+                    </thead>
+                    <tbody id="leadsBody">
+                        <tr class="loading_row">
+                            <td colspan="8"><span class="spinner"></span>Loading leads...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzqgFpmOD1FtY1lVNK25GY-UneTPA1CZ36Mp1WqWvveSM62xXF-FHQDqTigJfWlehnxcQ/exec";
+        const ADMIN_PASSWORD = "Psonare@123";
+        const SESSION_KEY = "sem_admin_auth";
+
+        let allLeads = [];
+
+        // ── Auth ──
+        function doLogin() {
+            const val = document.getElementById("passwordInput").value;
+            if (val === ADMIN_PASSWORD) {
+                sessionStorage.setItem(SESSION_KEY, "1");
+                showDashboard();
+            } else {
+                document.getElementById("loginError").style.display = "block";
+                document.getElementById("passwordInput").value = "";
+            }
+        }
+
+        function doLogout() {
+            sessionStorage.removeItem(SESSION_KEY);
+            document.getElementById("adminScreen").style.display = "none";
+            document.getElementById("loginScreen").style.display = "flex";
+        }
+
+        function showDashboard() {
+            document.getElementById("loginScreen").style.display = "none";
+            document.getElementById("adminScreen").style.display = "block";
+            loadLeads();
+        }
+
+        // Auto-login if session exists
+        if (sessionStorage.getItem(SESSION_KEY) === "1") showDashboard();
+
+        // ── Data ──
+        function loadLeads() {
+            const tbody = document.getElementById("leadsBody");
+            tbody.innerHTML = '<tr class="loading_row"><td colspan="8"><span class="spinner"></span>Loading leads...</td></tr>';
+
+            fetch(SCRIPT_URL)
+                .then(function(res) { return res.json(); })
+                .then(function(data) {
+                    allLeads = data.reverse(); // newest first
+                    renderTable(allLeads);
+                    updateStats(allLeads);
+                })
+                .catch(function() {
+                    tbody.innerHTML = '<tr class="loading_row"><td colspan="8" style="color:#ff4d4d;"><i class="fa fa-exclamation-circle me-2"></i>Failed to load data. Check your internet or script URL.</td></tr>';
+                });
+        }
+
+        function renderTable(leads) {
+            const tbody = document.getElementById("leadsBody");
+            if (!leads || leads.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="8"><div class="empty_state"><i class="fa fa-inbox"></i>No leads yet.</div></td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = leads.map(function(lead, i) {
+                return '<tr>' +
+                    '<td>' + (leads.length - i) + '</td>' +
+                    '<td>' + esc(lead["Timestamp"] || "—") + '</td>' +
+                    '<td style="color:#fff;font-weight:500;">' + esc(lead["Name"] || "—") + '</td>' +
+                    '<td>' + esc(lead["Phone"] || "—") + '</td>' +
+                    '<td>' + esc(lead["Project/Company"] || "—") + '</td>' +
+                    '<td>' + esc(lead["Budget"] || "—") + '</td>' +
+                    '<td>' + esc(lead["Location"] || "—") + '</td>' +
+                    '<td style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;" title="' + esc(lead["Message"] || "") + '">' + esc(lead["Message"] || "—") + '</td>' +
+                    '</tr>';
+            }).join("");
+        }
+
+        function updateStats(leads) {
+            const total = leads.length;
+            document.getElementById("statTotal").textContent = total;
+            document.getElementById("totalCount").textContent = total + " lead" + (total !== 1 ? "s" : "");
+
+            const now = new Date();
+            const todayStr = now.toLocaleDateString();
+            const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+
+            let todayCount = 0, weekCount = 0;
+            leads.forEach(function(lead) {
+                const ts = lead["Timestamp"];
+                if (!ts) return;
+                const d = new Date(ts);
+                if (d.toLocaleDateString() === todayStr) todayCount++;
+                if (d >= weekAgo) weekCount++;
+            });
+
+            document.getElementById("statToday").textContent = todayCount;
+            document.getElementById("statWeek").textContent = weekCount;
+        }
+
+        function filterTable() {
+            const q = document.getElementById("searchInput").value.toLowerCase();
+            if (!q) { renderTable(allLeads); return; }
+            const filtered = allLeads.filter(function(lead) {
+                return Object.values(lead).some(function(v) {
+                    return String(v).toLowerCase().includes(q);
+                });
+            });
+            renderTable(filtered);
+        }
+
+        // XSS guard
+        function esc(str) {
+            return String(str)
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;");
+        }
+    </script>
+
+</body>
+</html>
