@@ -260,6 +260,70 @@
         .search_box:focus { border-color: #1db954; }
         .search_box::placeholder { color: #555; }
 
+        .delete_btn {
+            background: transparent;
+            border: 1px solid #ff4d4d44;
+            color: #ff4d4d;
+            border-radius: 6px;
+            padding: 5px 10px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+        .delete_btn:hover { background: #ff4d4d22; border-color: #ff4d4d; }
+        .delete_btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+        .confirm_overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: #000000bb;
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+        }
+        .confirm_overlay.active { display: flex; }
+
+        .confirm_box {
+            background: #161616;
+            border: 1px solid #ff4d4d44;
+            border-radius: 14px;
+            padding: 32px 28px;
+            max-width: 380px;
+            width: 90%;
+            text-align: center;
+        }
+        .confirm_box i { font-size: 32px; color: #ff4d4d; margin-bottom: 14px; display: block; }
+        .confirm_box h6 { font-size: 16px; margin-bottom: 8px; }
+        .confirm_box p { color: #888; font-size: 13px; margin-bottom: 24px; }
+        .confirm_actions { display: flex; gap: 10px; justify-content: center; }
+
+        .confirm_cancel {
+            background: transparent;
+            border: 1px solid #333;
+            color: #aaa;
+            border-radius: 8px;
+            padding: 9px 22px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.2s;
+        }
+        .confirm_cancel:hover { border-color: #555; color: #fff; }
+
+        .confirm_delete {
+            background: #ff4d4d;
+            border: none;
+            color: #fff;
+            border-radius: 8px;
+            padding: 9px 22px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            transition: background 0.2s;
+        }
+        .confirm_delete:hover { background: #e03e3e; }
+
         @media (max-width: 768px) {
             .admin_body { padding: 16px; }
             .leads_table { font-size: 12px; }
@@ -330,11 +394,12 @@
                             <th>Budget</th>
                             <th>Location</th>
                             <th>Message</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody id="leadsBody">
                         <tr class="loading_row">
-                            <td colspan="8"><span class="spinner"></span>Loading leads...</td>
+                            <td colspan="9"><span class="spinner"></span>Loading leads...</td>
                         </tr>
                     </tbody>
                 </table>
@@ -343,9 +408,22 @@
         </div>
     </div>
 
+    <!-- Confirm Delete Modal -->
+    <div class="confirm_overlay" id="confirmOverlay">
+        <div class="confirm_box">
+            <i class="fa fa-trash"></i>
+            <h6>Delete this lead?</h6>
+            <p>This will permanently remove the entry from Google Sheets. This cannot be undone.</p>
+            <div class="confirm_actions">
+                <button class="confirm_cancel" onclick="closeConfirm()">Cancel</button>
+                <button class="confirm_delete" id="confirmDeleteBtn" onclick="confirmDelete()">Yes, Delete</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzqgFpmOD1FtY1lVNK25GY-UneTPA1CZ36Mp1WqWvveSM62xXF-FHQDqTigJfWlehnxcQ/exec";
-        const ADMIN_PASSWORD = "Psonare@123";
+        const ADMIN_PASSWORD = "03Aryan@Abhi007";
         const SESSION_KEY = "sem_admin_auth";
 
         let allLeads = [];
@@ -377,10 +455,54 @@
         // Auto-login if session exists
         if (sessionStorage.getItem(SESSION_KEY) === "1") showDashboard();
 
+        // ── Delete ──
+        let pendingDeleteRowIndex = null;
+        let pendingDeleteTrId = null;
+
+        function askDelete(rowIndex, trId) {
+            pendingDeleteRowIndex = rowIndex;
+            pendingDeleteTrId = trId;
+            document.getElementById("confirmOverlay").classList.add("active");
+        }
+
+        function closeConfirm() {
+            document.getElementById("confirmOverlay").classList.remove("active");
+            pendingDeleteRowIndex = null;
+            pendingDeleteTrId = null;
+        }
+
+        function confirmDelete() {
+            if (!pendingDeleteTrId) return;
+            const btn = document.getElementById("confirmDeleteBtn");
+            btn.disabled = true;
+            btn.textContent = "Deleting...";
+
+            // Optimistically remove row from UI
+            const tr = document.getElementById(pendingDeleteTrId);
+            if (tr) tr.remove();
+
+            // Remove from allLeads array and update stats
+            allLeads = allLeads.filter(function(l) { return l._rowIndex !== pendingDeleteRowIndex; });
+            updateStats(allLeads);
+
+            // Only call sheet delete if we have a valid row index
+            if (pendingDeleteRowIndex) {
+                fetch(SCRIPT_URL, {
+                    method: "POST",
+                    mode: "no-cors",
+                    body: JSON.stringify({ action: "delete", rowIndex: pendingDeleteRowIndex })
+                });
+            }
+
+            btn.disabled = false;
+            btn.textContent = "Yes, Delete";
+            closeConfirm();
+        }
+
         // ── Data ──
         function loadLeads() {
             const tbody = document.getElementById("leadsBody");
-            tbody.innerHTML = '<tr class="loading_row"><td colspan="8"><span class="spinner"></span>Loading leads...</td></tr>';
+            tbody.innerHTML = '<tr class="loading_row"><td colspan="9"><span class="spinner"></span>Loading leads...</td></tr>';
 
             fetch(SCRIPT_URL)
                 .then(function(res) { return res.json(); })
@@ -390,19 +512,21 @@
                     updateStats(allLeads);
                 })
                 .catch(function() {
-                    tbody.innerHTML = '<tr class="loading_row"><td colspan="8" style="color:#ff4d4d;"><i class="fa fa-exclamation-circle me-2"></i>Failed to load data. Check your internet or script URL.</td></tr>';
+                    tbody.innerHTML = '<tr class="loading_row"><td colspan="9" style="color:#ff4d4d;"><i class="fa fa-exclamation-circle me-2"></i>Failed to load data. Check your internet or script URL.</td></tr>';
                 });
         }
 
         function renderTable(leads) {
             const tbody = document.getElementById("leadsBody");
             if (!leads || leads.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="8"><div class="empty_state"><i class="fa fa-inbox"></i>No leads yet.</div></td></tr>';
+                tbody.innerHTML = '<tr><td colspan="9"><div class="empty_state"><i class="fa fa-inbox"></i>No leads yet.</div></td></tr>';
                 return;
             }
 
             tbody.innerHTML = leads.map(function(lead, i) {
-                return '<tr>' +
+                var trId = "tr_" + (lead._rowIndex || i);
+                var rowIdx = lead._rowIndex || null;
+                return '<tr id="' + trId + '">' +
                     '<td>' + (leads.length - i) + '</td>' +
                     '<td>' + esc(lead["Timestamp"] || "—") + '</td>' +
                     '<td style="color:#fff;font-weight:500;">' + esc(lead["Name"] || "—") + '</td>' +
@@ -411,6 +535,7 @@
                     '<td>' + esc(lead["Budget"] || "—") + '</td>' +
                     '<td>' + esc(lead["Location"] || "—") + '</td>' +
                     '<td style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;" title="' + esc(lead["Message"] || "") + '">' + esc(lead["Message"] || "—") + '</td>' +
+                    '<td><button class="delete_btn" onclick="askDelete(' + JSON.stringify(rowIdx) + ', \'' + trId + '\')"><i class="fa fa-trash me-1"></i>Delete</button></td>' +
                     '</tr>';
             }).join("");
         }
