@@ -793,7 +793,7 @@ header {
 }
 
 .brouchure_section {
-    padding: 0px 0 80px;
+    padding: 0px 0 15px;
     text-align: center;
 }
 
@@ -850,7 +850,7 @@ header {
     }
 
     .hero_title {
-        font-size: 55px;
+        font-size: 45px;
 
     }
 }
@@ -869,7 +869,7 @@ header {
     .btn_primary {
 
         padding: 10px 20px 12px;
-        font-size: 13px;
+        font-size: 11px;
 
     }
 
@@ -881,7 +881,7 @@ header {
     }
 
     .hero_title {
-        font-size: 30px;
+        font-size: 25px;
 
     }
 
@@ -890,13 +890,13 @@ header {
 
     }
     .what_we_do_subtitle span {
-    font-size: 30px;
+    font-size: 25px;
     
 }
 
     .what_we_do_subtitle {
-        font-size: 30px;
-            line-height: 37px;
+        font-size: 25px;
+            line-height: 33px;
 
     }
 
@@ -909,6 +909,7 @@ header {
     .service_item p {
   
     max-width: 100%;
+    font-size: 12px;
 }
 
 
@@ -977,6 +978,7 @@ header {
     font-size: 23px !important;
     
     line-height: 30px;
+    text-align: center;
 
 }
 
@@ -986,6 +988,22 @@ header {
 .nav-link {
    
     font-size: 13px !important;
+}
+
+.top_tag {
+    
+    font-size: 11px;
+    
+}
+
+.service_item h5 {
+  
+   
+    font-size: 16px;
+}
+.contact_card {
+   
+    height: auto;
 }
 }
 
@@ -1011,6 +1029,11 @@ header {
     padding: 0px 0px 0px;
 }
 .founder_section .col-md-3 {
-    width: 100%;
+    width: 73%;
+}
+.card_text {
+   
+    font-size: 11px;
+  
 }
 }
