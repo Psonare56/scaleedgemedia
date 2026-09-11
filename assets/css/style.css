@@ -303,6 +303,34 @@ header {
     align-content: center;
 }
 
+.drone_swiper {
+    padding: 10px 10px 55px;
+    position: relative;
+}
+
+.drone_swiper .swiper-slide {
+    height: auto;
+}
+
+.drone_swiper .our_project_card {
+    max-width: 100%;
+    height: 100%;
+}
+
+.drone_swiper .swiper-pagination {
+    bottom: 10px;
+}
+
+.drone_swiper .swiper-pagination-bullet {
+    background: #fff;
+    opacity: 0.4;
+}
+
+.drone_swiper .swiper-pagination-bullet-active {
+    background: #1db954;
+    opacity: 1;
+}
+
 
 .our_project_card {
     position: relative;
@@ -448,13 +476,16 @@ header {
     font-weight: 500;
     line-height: 52px;
     text-transform: uppercase;
-    text-align: center;
+    text-align: left;
 }
 
 .get_touch span {
-    font-size: 60px;
+    font-size: 72px;
+    line-height: 78px;
     color: #1db954;
     font-weight: 700;
+    display: inline-block;
+    margin-top: 10px;
 }
 .contact_section {
     /* background: #161616; */
@@ -725,6 +756,14 @@ header {
     width: 35px;
 }
 
+.service_item .service_icon {
+    width: 35px;
+    font-size: 28px;
+    color: #fff;
+    line-height: 1;
+    flex-shrink: 0;
+}
+
 /* .services_section::before {
   content: "";
   position: absolute;
@@ -773,18 +812,29 @@ header {
 }
 
 
-.ad-gallery {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 15px;
-    /* padding: 20px; */
+.posts_swiper {
+    padding: 10px 10px 55px;
 }
 
-.ad-gallery img {
+.posts_swiper img {
     width: 100%;
     height: auto;
     border-radius: 10px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.posts_swiper .swiper-pagination {
+    bottom: 10px;
+}
+
+.posts_swiper .swiper-pagination-bullet {
+    background: #fff;
+    opacity: 0.4;
+}
+
+.posts_swiper .swiper-pagination-bullet-active {
+    background: #1db954;
+    opacity: 1;
 }
 
 .ad_section {
@@ -856,11 +906,6 @@ header {
 }
 
 @media (max-width: 767px) {
-    .ad-gallery {
-   
-    grid-template-columns: repeat(2, 1fr);
-    
-}
     .what_we_do_title {
         font-size: 11px;
     }
@@ -970,15 +1015,15 @@ header {
         
     }
     .get_touch span {
-    font-size: 30px;
-    
+    font-size: 40px;
+    line-height: 46px;
 }
 
 .get_touch {
     font-size: 23px !important;
-    
+
     line-height: 30px;
-    text-align: center;
+    text-align: left;
 
 }
 
@@ -1012,11 +1057,6 @@ header {
     .our_project_grid {
         grid-template-columns: 1fr;
     }
-     .ad-gallery {
-   
-    grid-template-columns: repeat(1, 1fr);
-    
-}
 .hero_buttons .common_btn{
     margin-right: 0 !important;
     margin-bottom:10px;
